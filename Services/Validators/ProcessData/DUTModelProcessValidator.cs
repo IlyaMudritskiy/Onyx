@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using Onyx.Models.Domain;
+using Onyx.Models.Domain.ProcessData;
 
-namespace Onyx.Services.Validators
+namespace Onyx.Services.Validators.ProcessData
 {
-    public class DUTHeaderModelValidator : AbstractValidator<DUTHeaderModel>
+    public class DUTModelProcessValidator : AbstractValidator<ProcessDutModel>
     {
-        public DUTHeaderModelValidator()
+        public DUTModelProcessValidator()
         {
             RuleFor(x => x.SerialNr)
                 .NotEmpty().WithMessage("serial_nr is required.")

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Onyx.Models;
 using Onyx.Models.DTOs;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -52,7 +53,8 @@ namespace Onyx.Repositories
                 {
                     Data = $"User [{loginRequest.Username}] does not exist",
                     Success = false,
-                    Message = "$User [{loginRequest.Username}] does not exist"
+                    Message = $"User [{loginRequest.Username}] does not exist",
+                    HttpCode = 400
                 };
 
             var passwordResult = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
@@ -62,7 +64,8 @@ namespace Onyx.Repositories
                 {
                     Data = "Incorrect password",
                     Success = passwordResult,
-                    Message = "Incorrect password"
+                    Message = "Incorrect password",
+                    HttpCode = 400
                 };
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -71,8 +74,9 @@ namespace Onyx.Repositories
                 return new RepositoryResult<string>
                 {
                     Data = "User has no roles",
-                    Success = false,
-                    Message = $"No roles are assigned to user {user.UserName}"
+                    Success = true,
+                    Message = $"No roles are assigned to user {user.UserName}",
+                    HttpCode = 403
                 };
 
             var token = CreateJWT(user, roles.ToList());
@@ -81,7 +85,8 @@ namespace Onyx.Repositories
             {
                 Data = token,
                 Success = true,
-                Message = ""
+                Message = $"{user.UserName} successful login",
+                HttpCode = 200
             };
         }
 
@@ -96,9 +101,10 @@ namespace Onyx.Repositories
             if (registerRequest.Roles == null || registerRequest.Roles.Count() == 0)
                 return new RepositoryResult<string>
                 {
-                    Data = "No roles specified",
+                    Data = "",
                     Success = false,
-                    Message = "No roles specified"
+                    Message = "No roles specified",
+                    HttpCode = 400
                 };
 
             var createUserResult = await _userManager.CreateAsync(newIdentityUser, registerRequest.Password);
@@ -106,9 +112,10 @@ namespace Onyx.Repositories
             if (!createUserResult.Succeeded)
                 return new RepositoryResult<string>
                 {
-                    Data = $"Failed to create user [{registerRequest.Username}]",
+                    Data = "",
                     Success = false,
-                    Message = _identityErrorToString(createUserResult.Errors)
+                    Message = $"Failed to create user [{registerRequest.Username}]\n{_identityErrorToString(createUserResult.Errors)}",
+                    HttpCode = 400
                 };
 
             var roleAssignmentResult = await _userManager.AddToRolesAsync(newIdentityUser, registerRequest.Roles);
@@ -116,16 +123,18 @@ namespace Onyx.Repositories
             if (!roleAssignmentResult.Succeeded)
                 return new RepositoryResult<string>
                 {
-                    Data = $"Failed to assign role to user [{registerRequest.Username}]",
+                    Data = "",
                     Success = false,
-                    Message = _identityErrorToString(roleAssignmentResult.Errors)
+                    Message = $"Failed to assign role to user [{registerRequest.Username}]\n{_identityErrorToString(roleAssignmentResult.Errors)}",
+                    HttpCode = 500
                 };
 
             return new RepositoryResult<string>
             {
-                Data = $"New user [{registerRequest.Username}] created",
+                Data = "",
                 Success = true,
-                Message = ""
+                Message = $"New user [{registerRequest.Username}] created",
+                HttpCode = 200
             };
         }
 

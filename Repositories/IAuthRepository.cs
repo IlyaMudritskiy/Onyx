@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Onyx.Models;
 using Onyx.Models.DTOs;
 
 namespace Onyx.Repositories

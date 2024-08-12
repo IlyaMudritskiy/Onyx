@@ -2,7 +2,7 @@
 using MongoDB.Bson;
 using System.Text.Json.Serialization;
 
-namespace Onyx.Models.Domain
+namespace Onyx.Models.Domain.ProcessData
 {
     public class ShortProcessDataModel
     {
@@ -16,6 +16,6 @@ namespace Onyx.Models.Domain
 
         [BsonElement("DUT")]
         [JsonPropertyName("DUT")]
-        public DUTHeaderModel DUT { get; set; }
+        public ProcessDutModel DUT { get; set; }
     }
 }

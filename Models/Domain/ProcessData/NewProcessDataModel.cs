@@ -1,20 +1,20 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System.Text.Json.Serialization;
 
-namespace Onyx.Models.Domain
+namespace Onyx.Models.Domain.ProcessData
 {
     public class NewProcessDataModel
     {
         [BsonElement("DUT")]
         [JsonPropertyName("DUT")]
-        public DUTHeaderModel DUT { get; set; }
+        public ProcessDutModel DUT { get; set; }
 
         [BsonElement("Steps")]
         [JsonPropertyName("Steps")]
-        public List<StepModel> Steps { get; set; } = new List<StepModel>();
+        public List<ProcessStepModel> Steps { get; set; } = new List<ProcessStepModel>();
     }
 
-    public class DUTHeaderModel
+    public class ProcessDutModel
     {
         [BsonElement("serial_nr")]
         [JsonPropertyName("serial_nr")]
@@ -53,7 +53,7 @@ namespace Onyx.Models.Domain
         public string Line { get; set; } = null!;
     }
 
-    public class StepModel
+    public class ProcessStepModel
     {
         [BsonElement("stepname")]
         [JsonPropertyName("stepname")]
@@ -69,10 +69,10 @@ namespace Onyx.Models.Domain
 
         [BsonElement("Measurements")]
         [JsonPropertyName("Measurements")]
-        public List<MeasurementModel> Measurements { get; set; } = new List<MeasurementModel>();
+        public List<ProcessMeasurementModel> Measurements { get; set; } = new List<ProcessMeasurementModel>();
     }
 
-    public class MeasurementModel
+    public class ProcessMeasurementModel
     {
         [BsonElement("Date")]
         [JsonPropertyName("Date")]

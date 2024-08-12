@@ -1,17 +1,19 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Onyx.Models.Domain;
 using Onyx.Models;
 using Onyx.Repositories;
-using Onyx.Services.Validators;
-using Onyx.Services;
 using System.Text;
 using FluentValidation.AspNetCore;
 using Onyx.Mappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
+using Onyx.Models.Domain.ProcessData;
+using Onyx.Models.Domain.AcousticData;
+using Onyx.Services.Validators.ProcessData;
+using Onyx.DbContext;
+using Onyx.Services.Validators.AcousticData;
 
 namespace Onyx.Startup
 {
@@ -73,8 +75,8 @@ namespace Onyx.Startup
         private static void RegisterDatabases(IServiceCollection services, IConfiguration configuration)
         {
             // Mongo Db
-            services.Configure<MongoDBSettings>(configuration.GetSection("MDBProcessDataConnection"));
-            services.AddSingleton<MDBProcessDataService>();
+            services.Configure<MongoDBSettings>(configuration.GetSection("MongoDbSettings"));
+            services.AddSingleton<MongoDbService>();
 
             // SQL Server
             services.AddDbContext<UserIdentitiesContext>(
@@ -85,20 +87,26 @@ namespace Onyx.Startup
         private static void RegisterMappers(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(ProcessDataMapper));
+            services.AddAutoMapper(typeof(AcousticDataMapper));
         }
 
         private static void RegisterRepositories(IServiceCollection services)
         {
-            services.AddScoped<IProcessDataRepository, MongoProcessDataRepository>();
+            services.AddScoped<IMongoProcessDataRepository, MongoProcessDataRepository>();
+            services.AddScoped<IMongoAcousticDataRepository, MongoAcousticDataRepository>();
             services.AddScoped<IAuthRepository, UserAuthRepository>();
         }
 
         private static void RegisterValidators(IServiceCollection services)
         {
             services.AddFluentValidationAutoValidation();
-            services.AddScoped<IValidator<DUTHeaderModel>, DUTHeaderModelValidator>();
+
+            services.AddScoped<IValidator<ProcessDutModel>, DUTModelProcessValidator>();
             services.AddScoped<IValidator<NewProcessDataModel>, NewProcessDataModelValidator>();
             services.AddScoped<IValidator<ProcessDataModel>, ProcessDataModelValidator>();
+
+            services.AddScoped<IValidator<AcousticDataModel>, AcousticDataValidator>();
+            services.AddScoped<IValidator<NewAcousticDataModel>, NewAcousticDataModelValidator>();
         }
 
         private static void RegisterAuthentication(IServiceCollection services, IConfiguration configuration)

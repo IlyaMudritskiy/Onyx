@@ -3,7 +3,7 @@ using MongoDB.Bson;
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 
-namespace Onyx.Models.Domain
+namespace Onyx.Models.Domain.ProcessData
 {
     public class ProcessDataModel : NewProcessDataModel
     {
