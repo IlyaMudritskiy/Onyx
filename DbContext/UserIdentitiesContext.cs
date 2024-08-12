@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Onyx.Services
+namespace Onyx.DbContext
 {
     public class UserIdentitiesContext : IdentityDbContext
     {
@@ -15,6 +15,7 @@ namespace Onyx.Services
         {
             base.OnModelCreating(builder);
 
+            // Creating default roles for users
             var readerId = "a9d874e2-a943-4ce9-a921-49a4f0a6da1d";
             var writerId = "98084f71-61ed-4aec-a6d6-09b99263866f";
 

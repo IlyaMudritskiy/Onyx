@@ -37,6 +37,6 @@ app.MapControllers();
 
 app.UseCors();
 
-app.MapHub<DutUpdateHub>("/processdata-hub");
+app.MapHub<DutUpdateHub>("/newdata-hub");
 
 app.Run();

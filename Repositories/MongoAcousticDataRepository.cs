@@ -3,18 +3,18 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Onyx.DbContext;
 using Onyx.Models;
-using Onyx.Models.Domain.ProcessData;
+using Onyx.Models.Domain.AcousticData;
 
 namespace Onyx.Repositories
 {
-    public class MongoProcessDataRepository : IMongoProcessDataRepository
+    public class MongoAcousticDataRepository : IMongoAcousticDataRepository
     {
         private readonly MongoDbService _mongoDBService;
         private readonly IMapper _mapper;
         private string _dbName;
         private string _colName;
 
-        public MongoProcessDataRepository(IMapper mapper, MongoDbService mongoDBService)
+        public MongoAcousticDataRepository(IMapper mapper, MongoDbService mongoDBService)
         {
             _mapper = mapper;
             _mongoDBService = mongoDBService;
@@ -26,29 +26,29 @@ namespace Onyx.Repositories
             _colName = colName;
         }
 
-        public async Task<List<ProcessDataModel>> GetManyAsync(QueryParams queryParams)
+        public async Task<List<AcousticDataModel>> GetManyAsync(QueryParams queryParams)
         {
-            return await _mongoDBService.GetManyAsync<ProcessDataModel>(queryParams, _dbName, _colName);
+            return await _mongoDBService.GetManyAsync<AcousticDataModel>(queryParams, _dbName, _colName);
         }
 
-        public async Task<ProcessDataModel> GetOneAsync(string idSerial)
+        public async Task<AcousticDataModel> GetOneAsync(string idSerial)
         {
-            ProcessDataModel result = null;
+            AcousticDataModel result = null;
             try
             {
                 var id = ObjectId.Parse(idSerial);
-                result = await _mongoDBService.GetOneAsync<ProcessDataModel, ObjectId>(x => x.Id, id, _dbName, _colName);
+                result = await _mongoDBService.GetOneAsync<AcousticDataModel, ObjectId>(x => x.Id, id, _dbName, _colName);
             }
             catch (FormatException ex)
             {
-                result = await _mongoDBService.GetOneAsync< ProcessDataModel, string>(x => x.DUT.SerialNr, idSerial, _dbName, _colName);
+                result = await _mongoDBService.GetOneAsync<AcousticDataModel, string>(x => x.DUT.SerialNr, idSerial, _dbName, _colName);
             }
             return result;
         }
 
-        public async Task<ProcessDataModel> CreateAsync(NewProcessDataModel unit)
+        public async Task<AcousticDataModel> CreateAsync(NewAcousticDataModel unit)
         {
-            var unitToCreate = _mapper.Map<ProcessDataModel>(unit);
+            var unitToCreate = _mapper.Map<AcousticDataModel>(unit);
             try
             {
                 return await _mongoDBService.CreateAsync(unitToCreate, _dbName, _colName);
@@ -59,9 +59,9 @@ namespace Onyx.Repositories
             }
         }
 
-        public async Task<bool> UpdateAsync(ProcessDataModel unit)
+        public async Task<bool> UpdateAsync(AcousticDataModel unit)
         {
-            var updateDefinition = Builders<ProcessDataModel>.Update
+            var updateDefinition = Builders<AcousticDataModel>.Update
                 .Set(x => x.DUT, unit.DUT)
                 .Set(x => x.Steps, unit.Steps);
 
@@ -71,15 +71,15 @@ namespace Onyx.Repositories
 
         public async Task<bool> DeleteAsync(string idSerial)
         {
-            ProcessDataModel result = null;
+            AcousticDataModel result = null;
             try
             {
                 var id = ObjectId.Parse(idSerial);
-                result = await _mongoDBService.DeleteAsync<ProcessDataModel, ObjectId>(x => x.Id, id, _dbName, _colName);
+                result = await _mongoDBService.DeleteAsync<AcousticDataModel, ObjectId>(x => x.Id, id, _dbName, _colName);
             }
             catch (FormatException ex)
             {
-                result = await _mongoDBService.DeleteAsync<ProcessDataModel, string>(x => x.DUT.SerialNr, idSerial, _dbName, _colName);
+                result = await _mongoDBService.DeleteAsync<AcousticDataModel, string>(x => x.DUT.SerialNr, idSerial, _dbName, _colName);
             }
             return !(result == null);
         }

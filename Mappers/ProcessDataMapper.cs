@@ -1,6 +1,5 @@
-﻿using Onyx.Models.Domain;
-
-using AutoMapper;
+﻿using AutoMapper;
+using Onyx.Models.Domain.ProcessData;
 namespace Onyx.Mappers
 {
     public class ProcessDataMapper : Profile
