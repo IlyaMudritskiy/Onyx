@@ -51,6 +51,10 @@ namespace Onyx.Models.Domain.ProcessData
         [BsonElement("machine_id")]
         [JsonPropertyName("machine_id")]
         public string Line { get; set; } = null!;
+
+        [BsonElement("created_at")]
+        [JsonPropertyName("created_at")]
+        public DateTime CreatedAt { get; set; }
     }
 
     public class ProcessStepModel
@@ -76,7 +80,7 @@ namespace Onyx.Models.Domain.ProcessData
     {
         [BsonElement("Date")]
         [JsonPropertyName("Date")]
-        public string TimeStamp { get; set; } = null!;
+        public DateTime TimeStamp { get; set; }
 
         [BsonElement("MeasurementValue")]
         [JsonPropertyName("MeasurementValue")]

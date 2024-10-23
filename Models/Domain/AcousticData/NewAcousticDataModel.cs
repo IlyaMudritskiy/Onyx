@@ -54,7 +54,7 @@ namespace Onyx.Models.Domain.AcousticData
 
         [BsonElement("duttime")]
         [JsonPropertyName("duttime")]
-        public string DutTime { get; set; }
+        public DateTime DutTime { get; set; }
 
         [BsonElement("nestnumber")]
         [JsonPropertyName("nestnumber")]
