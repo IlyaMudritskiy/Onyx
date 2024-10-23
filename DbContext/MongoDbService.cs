@@ -41,7 +41,7 @@ namespace Onyx.DbContext
         public async Task<List<TModel>> GetManyAsync<TModel>(QueryParams qps, string databaseName, string collectionName)
         {
             var collection = _getCollection<TModel>(databaseName, collectionName);
-            var filter = _buildFilterFromQuery<TModel>(qps.FilterField, qps.FilterValue);
+            var filter = _buildFilterFromQuery<TModel>(qps);
             var sorting = _buildSortingFromQuery<TModel>(qps.SortBy, qps.IsAscending);
 
             var res = collection
@@ -130,16 +130,25 @@ namespace Onyx.DbContext
         /// <param name="filterField">A list of field names to filter documents by.</param>
         /// <param name="filterValue">A list of values corresponding to the fields specified in filterField.</param>
         /// <returns>A filter definition constructed from the query parameters.</returns>
-        private FilterDefinition<T> _buildFilterFromQuery<T>(List<string> filterField = null, List<string> filterValue = null)
+        private FilterDefinition<T> _buildFilterFromQuery<T>(QueryParams qps)
         {
             FilterDefinition<T> filter = Builders<T>.Filter.Empty;
 
-            if ((filterField == null || filterField.Count == 0) && (filterValue == null || filterValue.Count == 0))
-                return filter;
-
-            for (int i = 0; i < filterField.Count; i++)
+            if (qps.FilterField != null)
             {
-                filter &= Builders<T>.Filter.Eq(filterField[i], filterValue[i]);
+                for (int i = 0; i < qps.FilterField.Count; i++)
+                {
+                    filter &= Builders<T>.Filter.Eq(qps.FilterField[i], qps.FilterValue[i]);
+                }
+            }
+            
+            if (qps.FromDate.HasValue && qps.ToDate.HasValue)
+            {
+                if (qps.FromDate.HasValue)
+                    filter &= Builders<T>.Filter.Gte("DUT.CreatedAt", qps.FromDate.Value);
+
+                if (qps.ToDate.HasValue)
+                    filter &= Builders<T>.Filter.Lte("DUT.CreatedAt", qps.ToDate.Value);
             }
 
             return filter;

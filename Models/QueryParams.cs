@@ -34,5 +34,15 @@
         /// Amount of records per page.
         /// </summary>
         public int PageSize { get; set; } = 10;
+
+        /// <summary>
+        /// Optional start date for datetime range filtering.
+        /// </summary>
+        public DateTime? FromDate { get; set; }
+
+        /// <summary>
+        /// Optional end date for datetime range filtering.
+        /// </summary>
+        public DateTime? ToDate { get; set; }
     }
 }

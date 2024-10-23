@@ -7,7 +7,9 @@ namespace Onyx.Services.Validators.ProcessData
     {
         public NewProcessDataModelValidator()
         {
-            RuleFor(x => x.DUT).SetValidator(new DUTModelProcessValidator());
+            RuleFor(x => x.DUT)
+                .NotNull().WithMessage("DUT is required.")
+                .SetValidator(new DUTModelProcessValidator());
         }
     }
 }

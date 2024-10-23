@@ -14,6 +14,7 @@ using Onyx.Models.Domain.AcousticData;
 using Onyx.Services.Validators.ProcessData;
 using Onyx.DbContext;
 using Onyx.Services.Validators.AcousticData;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Onyx.Startup
 {
@@ -80,7 +81,7 @@ namespace Onyx.Startup
 
             // SQL Server
             services.AddDbContext<UserIdentitiesContext>(
-                options => options.UseSqlServer(configuration.GetConnectionString("SQLSUsersAuthTest"))
+                options => options.UseSqlServer(configuration.GetConnectionString("SQLSUsersAuth"))
             );
         }
 
@@ -107,6 +108,22 @@ namespace Onyx.Startup
 
             services.AddScoped<IValidator<AcousticDataModel>, AcousticDataValidator>();
             services.AddScoped<IValidator<NewAcousticDataModel>, NewAcousticDataModelValidator>();
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var errors = context.ModelState
+                        .Where(e => e.Value.Errors.Count > 0)
+                        .Select(e => new
+                        {
+                            Name = e.Key,
+                            Message = e.Value.Errors.First().ErrorMessage
+                        }).ToArray();
+
+                    return new BadRequestObjectResult(errors);
+                };
+            });
         }
 
         private static void RegisterAuthentication(IServiceCollection services, IConfiguration configuration)

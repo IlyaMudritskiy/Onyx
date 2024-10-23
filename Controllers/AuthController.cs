@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Onyx.Models.DTOs;
 using Onyx.Repositories;
 
@@ -50,6 +51,14 @@ namespace Onyx.Controllers
                 return StatusCode(result.HttpCode, result.Message);
 
             return StatusCode(result.HttpCode, result.Data);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("Ping")]
+        public async Task<IActionResult> Ping()
+        {
+            return Ok();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using System;
 
 namespace Onyx.SignalR
 {
@@ -8,8 +7,9 @@ namespace Onyx.SignalR
         public override async Task OnConnectedAsync()
         {
             var clientId = Context.GetHttpContext().Request.Query["clientId"].ToString();
+            var lineId = Context.GetHttpContext().Request.Query["lineId"].ToString();
             var typeId = Context.GetHttpContext().Request.Query["typeId"].ToString();
-            var group = $"G-{typeId}";
+            var group = $"G-{lineId}-{typeId}";
 
             if (!clientId.StartsWith("IE50"))
             {
@@ -25,9 +25,10 @@ namespace Onyx.SignalR
         {
             var lineId = Context.GetHttpContext().Request.Query["lineId"].ToString();
             var typeId = Context.GetHttpContext().Request.Query["typeId"].ToString();
-            var group = $"G-{typeId}";
+            var group = $"G-{lineId}-{typeId}";
 
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
+            Console.WriteLine($"Removed from group {group}");
 
             await base.OnDisconnectedAsync(ex);
         }

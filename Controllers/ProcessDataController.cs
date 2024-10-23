@@ -10,6 +10,7 @@ using System.Text.Json;
 
 namespace Onyx.Controllers
 {
+    // Бля, ну короче...
     [Route("api/[controller]")]
     [ApiController]
     public class ProcessDataController : ControllerBase
@@ -101,13 +102,14 @@ namespace Onyx.Controllers
         [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] NewProcessDataModel unit)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
             var result = await _repository.CreateAsync(unit);
 
             if (result == null)
                 return StatusCode(409, $"Unit {unit.DUT.SerialNr} already exists!");
 
-            var group = $"G-{unit.DUT.TypeID}";
-            //Console.WriteLine(group);
+            var group = $"G-{unit.DUT.Line}-{unit.DUT.TypeID}";
 
             await _hub.Clients.Group(group).SendAsync("NewDataAvailable", JsonSerializer.Serialize(result));
 
