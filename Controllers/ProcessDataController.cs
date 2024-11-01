@@ -109,7 +109,8 @@ namespace Onyx.Controllers
             if (result == null)
                 return StatusCode(409, $"Unit {unit.DUT.SerialNr} already exists!");
 
-            var group = $"G-{unit.DUT.Line}-{unit.DUT.TypeID}";
+            //var group = $"G-{unit.DUT.Line}-{unit.DUT.TypeID}";
+            var group = $"G-{unit.DUT.Line}";
 
             await _hub.Clients.Group(group).SendAsync("NewDataAvailable", JsonSerializer.Serialize(result));
 

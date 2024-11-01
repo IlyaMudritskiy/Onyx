@@ -145,10 +145,10 @@ namespace Onyx.DbContext
             if (qps.FromDate.HasValue && qps.ToDate.HasValue)
             {
                 if (qps.FromDate.HasValue)
-                    filter &= Builders<T>.Filter.Gte("DUT.CreatedAt", qps.FromDate.Value);
+                    filter &= Builders<T>.Filter.Gte("DUT.created_at", qps.FromDate.Value);
 
                 if (qps.ToDate.HasValue)
-                    filter &= Builders<T>.Filter.Lte("DUT.CreatedAt", qps.ToDate.Value);
+                    filter &= Builders<T>.Filter.Lte("DUT.created_at", qps.ToDate.Value);
             }
 
             return filter;

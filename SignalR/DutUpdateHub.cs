@@ -8,8 +8,8 @@ namespace Onyx.SignalR
         {
             var clientId = Context.GetHttpContext().Request.Query["clientId"].ToString();
             var lineId = Context.GetHttpContext().Request.Query["lineId"].ToString();
-            var typeId = Context.GetHttpContext().Request.Query["typeId"].ToString();
-            var group = $"G-{lineId}-{typeId}";
+            //var typeId = Context.GetHttpContext().Request.Query["typeId"].ToString();
+            var group = $"G-{lineId}";
 
             if (!clientId.StartsWith("IE50"))
             {
@@ -24,8 +24,9 @@ namespace Onyx.SignalR
         public override async Task OnDisconnectedAsync(Exception ex)
         {
             var lineId = Context.GetHttpContext().Request.Query["lineId"].ToString();
-            var typeId = Context.GetHttpContext().Request.Query["typeId"].ToString();
-            var group = $"G-{lineId}-{typeId}";
+            //var typeId = Context.GetHttpContext().Request.Query["typeId"].ToString();
+            //var group = $"G-{lineId}-{typeId}";
+            var group = $"G-{lineId}";
 
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
             Console.WriteLine($"Removed from group {group}");
